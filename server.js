@@ -23,8 +23,8 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(async () => {
   console.log('✅ MongoDB connected');
 
-  await connectRabbitMQ(); // ✅ Wait for RabbitMQ connection
-  startVendorConsumer();   // ✅ Start consumer after it's connected
+  await connectRabbitMQ(); 
+  startVendorConsumer(); 
 
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {

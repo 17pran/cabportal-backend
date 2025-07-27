@@ -1,7 +1,7 @@
 
 // backend/utils/vendorConsumer.js
 import amqp from 'amqplib';
-import Booking from '../models/bookingModel.js';
+import Booking from '../models/Booking.js';
 
 export const consumeVendorQueue = async () => {
   try {

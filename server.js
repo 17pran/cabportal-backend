@@ -11,9 +11,11 @@ dotenv.config();
 
 const app = express();
 
-// ✅ CORS setup to allow requests from your Vercel frontend
+// ✅ Proper CORS setup
+const allowedOrigins = ['https://cabportal-frontend.vercel.app'];
+
 app.use(cors({
-  origin: ['https://cabportal-frontend.vercel.app'],
+  origin: allowedOrigins,
   credentials: true,
 }));
 
@@ -29,8 +31,8 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(async () => {
   console.log('✅ MongoDB connected');
 
-  await connectRabbitMQ();
-  startVendorConsumer();
+  await connectRabbitMQ(); 
+  startVendorConsumer(); 
 
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {

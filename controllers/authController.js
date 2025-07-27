@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 exports.register = async (req, res) => {
-  const { email, password, role } = req.body;
+  const { name, email, password, role } = req.body;
   console.log('📩 Register request received:', req.body);
 
   try {
@@ -14,15 +14,15 @@ exports.register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ email, password: hashedPassword, role });
+    const user = new User({ name, email, password: hashedPassword, role });
     await user.save();
 
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    console.log('✅ User registered:', user.email);
     res.json({
       token,
       user: {
+        name: user.name,
         email: user.email,
         role: user.role,
       },
@@ -32,6 +32,7 @@ exports.register = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;

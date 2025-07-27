@@ -1,7 +1,3 @@
-app.use((req, res, next) => {
-  console.log(`📥 Incoming ${req.method} request to ${req.url}`);
-  next();
-});
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
@@ -13,17 +9,21 @@ const { consumeVendorQueue } = require('./utils/vendorConsumer');
 
 dotenv.config();
 
-const app = express();
+const app = express(); // ✅ Define app before using it
+
+// Logging middleware
+app.use((req, res, next) => {
+  console.log(`📥 Incoming ${req.method} request to ${req.url}`);
+  next();
+});
 
 const allowedOrigins = ['https://cabportal-frontend.vercel.app'];
-
 app.use(cors({
   origin: allowedOrigins,
   credentials: true,
 }));
 
 app.use(express.json());
-
 app.use('/api/auth', authRoutes);
 app.use('/api/bookings', bookingRoutes);
 

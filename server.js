@@ -10,7 +10,13 @@ const { startVendorConsumer } = require('./utils/vendorConsumer');
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// ✅ CORS setup to allow requests from your Vercel frontend
+app.use(cors({
+  origin: ['https://cabportal-frontend.vercel.app'],
+  credentials: true,
+}));
+
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
@@ -23,8 +29,8 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(async () => {
   console.log('✅ MongoDB connected');
 
-  await connectRabbitMQ(); 
-  startVendorConsumer(); 
+  await connectRabbitMQ();
+  startVendorConsumer();
 
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {

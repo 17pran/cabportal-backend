@@ -8,19 +8,20 @@ function VendorDashboard() {
 
   const [bookings, setBookings] = useState([]);
   const [assignModalData, setAssignModalData] = useState(null);
+
   const token = localStorage.getItem('token');
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const fetchBookings = useCallback(async () => {
     try {
       const res = await axios.get(`${backendUrl}/api/bookings`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       setBookings(res.data);
     } catch (err) {
       console.error('Failed to fetch bookings:', err.response?.data || err.message);
     }
-  }, [token, backendUrl]);
+  }, [backendUrl, token]);
 
   useEffect(() => {
     fetchBookings();
@@ -39,10 +40,10 @@ function VendorDashboard() {
     }
   };
 
-  const handleEnd = (id) => updateBookingStatus(id, 'Completed');
   const handleAccept = (booking) => setAssignModalData(booking);
   const handleReject = (id) => updateBookingStatus(id, 'Rejected');
   const handleOpenMarket = (id) => updateBookingStatus(id, 'OpenMarket');
+  const handleEnd = (id) => updateBookingStatus(id, 'Completed');
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -68,7 +69,8 @@ function VendorDashboard() {
                 <p><strong>Pickup:</strong> {booking.pickup}</p>
                 <p><strong>Dropoff:</strong> {booking.dropoff}</p>
                 <p><strong>Date & Time:</strong> {new Date(booking.datetime).toLocaleString()}</p>
-                <p><strong>Status:</strong> 
+                <p>
+                  <strong>Status:</strong>
                   <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
                     {booking.status}
                   </span>

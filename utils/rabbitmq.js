@@ -1,16 +1,17 @@
 // utils/rabbitmq.js
 const amqp = require('amqplib');
-let channel = null;
 require('dotenv').config();
+
+let channel = null;
 
 async function connectRabbitMQ() {
   try {
     const rabbitmqUrl = process.env.RABBITMQ_URL || 'amqp://localhost';
-const connection = await amqp.connect(process.env.RABBITMQ_URL);
+    const connection = await amqp.connect(rabbitmqUrl);
     channel = await connection.createChannel();
     console.log('✅ Connected to RabbitMQ');
   } catch (err) {
-    console.error('❌ RabbitMQ connection error:', err);
+    console.error('❌ RabbitMQ connection error:', err.message);
   }
 }
 

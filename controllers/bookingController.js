@@ -1,13 +1,11 @@
 const Booking = require('../models/Booking');
-const { publishToQueue } = require('../utils/rabbitmq'); // 👈 added
+const { publishToQueue } = require('../utils/rabbitmq');
 
-// Create a booking
 exports.createBooking = async (req, res) => {
   try {
     const booking = new Booking(req.body);
     const saved = await booking.save();
 
-    // Publish to RabbitMQ queue
     await publishToQueue('booking_requests', {
       bookingId: saved._id,
       guestName: saved.guestName,
@@ -25,7 +23,6 @@ exports.createBooking = async (req, res) => {
   }
 };
 
-// Get all bookings (company/vendor)
 exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await Booking.find().sort({ createdAt: -1 });
@@ -35,7 +32,6 @@ exports.getAllBookings = async (req, res) => {
   }
 };
 
-// Get bookings by status
 exports.getBookingsByStatus = async (req, res) => {
   try {
     const { status } = req.params;
@@ -46,7 +42,6 @@ exports.getBookingsByStatus = async (req, res) => {
   }
 };
 
-// Update booking status
 exports.updateBookingStatus = async (req, res) => {
   try {
     const { id } = req.params;
